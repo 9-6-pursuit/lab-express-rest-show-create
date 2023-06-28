@@ -3,7 +3,7 @@ const logs = express.Router();
 
 const logArray = require("../../models/captainsLog");
 
-// SUB ROUTE W/PARAMETER POINTING TO INDEX POSITION, SEND ERROR MESSAGE
+// NON SPECIFIC PARAMETER POINTING TO INDEX POSITION, SEND ERROR MESSAGE
 logs.get("/:index", (req, res) => {
   const { index } = req.params;
   console.log("GET request to /v2/logs" + index);
