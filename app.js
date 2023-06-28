@@ -1,6 +1,7 @@
 //DEPENDENCIES
 const express = require("express");
-const captainsLogController = require("./controllers/captainsController");
+const captainsLogController = require("./controllers/logsController");
+const v2Controller = require("./v2/controllers/captainsLogController");
 
 //CONFIGURATION
 const app = express();
@@ -10,6 +11,7 @@ app.use(express.json());
 
 //ROUTES
 app.use("/logs", captainsLogController);
+app.use("/v2/logs", v2Controller);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Captain's Log");
