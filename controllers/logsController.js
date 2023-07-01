@@ -1,9 +1,21 @@
 const express = require("express");
 const logs = express.Router();
-const logsArray = require("../models/logs.js");
+const logsArray = require("../models/log.js");
 
+
+//Index
 logs.get("/", (req, res) => {
     res.json(logsArray);
+  });
+
+  
+//Show
+logs.get("/:arrayIndex", (req, res) => {
+    if (logsArray[req.params.arrayIndex]){
+        res.json(logsArray[req.params.arrayIndex]);
+    } else {
+        res.status(404).redirect("/404")
+    }
   });
   
 
