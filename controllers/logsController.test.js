@@ -53,10 +53,10 @@ describe("logs", () => {
         expect(JSON.parse(response.text)).toEqual(logsArray[1]);
       });
 
-      it("sends a redirect when an invalid index is given", async () => {
+      it("sends a 404 status when an invalid index is given", async () => {
         const response = await request(logs).get("/logs/9001");
 
-        expect(response.redirect).toBe(true);
+        expect(response.status).toBe(404);
       });
     });
 
