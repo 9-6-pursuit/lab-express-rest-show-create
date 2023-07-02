@@ -18,8 +18,8 @@ app.use("/logs", logs);
 
 
 // 404 PAGE
-app.get("*", (req, res) => {
-    res.json({ error: "Page not found" });
+app.use("/*", (req, res) => {
+    res.status(404).send("Sorry, no page found!");
   });
 
 // EXPORT
