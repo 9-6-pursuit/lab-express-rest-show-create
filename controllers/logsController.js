@@ -1,22 +1,38 @@
 const express = require("express");
 const logs = express.Router();
-const logsArray = require("../models/log.js");
+let logsArray = require("../models/log.js");
 
-
-//Index
+// Index
 logs.get("/", (req, res) => {
     res.json(logsArray);
-  });
+});
 
-  
-//Show
+// Show
 logs.get("/:arrayIndex", (req, res) => {
-    if (logsArray[req.params.arrayIndex]){
-        res.json(logsArray[req.params.arrayIndex]);
+    const arrayIndex = parseInt(req.params.arrayIndex);
+    if (arrayIndex >= 0 && arrayIndex < logsArray.length){
+        res.json(logsArray[arrayIndex]);
     } else {
-        res.status(404).redirect("/404")
+        res.status(404).redirect("/404");
     }
-  });
-  
+});
 
-  module.exports = logs;
+// Create
+logs.post("/", (req, res) => {
+    const newLog = req.body;
+    logsArray.push(newLog);
+    res.json(newLog);
+});
+
+// Delete
+logs.delete("/:arrayIndex", (req, res) => {
+    const arrayIndex = parseInt(req.params.arrayIndex);
+    if (arrayIndex >= 0 && arrayIndex < logsArray.length) {
+        const deletedLog = logsArray.splice(arrayIndex, 1);
+        res.json(deletedLog[0]);
+    } else {
+        res.status(404).json({ error: "Invalid index" });
+    }
+});
+
+module.exports = logs;
