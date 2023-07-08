@@ -1,12 +1,16 @@
 
 // DEPENDENCIES
+// added 7.8.23
+const cors = require("cors");
 const express = require("express");
 
 // CONFIGURATION
 const app = express();
 
 // MIDDLEWARE
+// added 7.8.23
 app.use(express.json()); // Parse incoming JSON
+app.use(cors());
 
 const logsController = require("./controllers/logsController");
 app.use("/logs", logsController);
