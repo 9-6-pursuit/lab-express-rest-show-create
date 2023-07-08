@@ -8,7 +8,7 @@ const app = express();
 // MIDDLEWARE
 app.use(express.json()); // Parse incoming JSON
 
-const logsController = require("./controllers/logsController.js");
+const logsController = require("./controllers/logsController");
 app.use("/logs", logsController);
 
 // ROUTES
