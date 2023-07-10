@@ -7,6 +7,21 @@ logs.get("/", (req, res) => {
 });
 
 // SHOW
+
+
+// logs.get("/", (req, res) => {
+//   console.log(req.query)
+//   const { order } = req.query;
+//   if ((order === "asc")) {
+//    asc = logsArray.sort(a,b)
+//     res.json(asc);
+//   }
+//   else if ((order === "desc")){
+//     desc = logsArray.reverse()
+//     res.json(desc)
+//   }
+// })
+
 logs.get("/:arrayIndex", (req, res) => {
   if (logsArray[req.params.arrayIndex]) {
     res.json(logsArray[req.params.arrayIndex]);
@@ -14,6 +29,7 @@ logs.get("/:arrayIndex", (req, res) => {
     res.redirect("/error")
   }
 });
+
 
 // CREATE
 logs.post("/", (req, res) => {
@@ -30,4 +46,14 @@ logs.delete("/:arrayIndex", (req, res) => {
       res.status(404).json({ error: "Not Found" });
     }
   });
+
+  // UPDATE
+logs.put("/:arrayIndex", (req, res) => {
+  if (logsArray[req.params.arrayIndex]) {
+    logsArray[req.params.arrayIndex] = req.body;
+    res.status(200).json(logsArray[req.params.arrayIndex]);
+  } else {
+    res.status(404).json({ error: "Not Found" });
+  }
+});
 module.exports = logs;
