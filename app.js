@@ -6,6 +6,7 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 const logs = require("./models/log");
 const app = express();
+const logsController = require("./v2/controllers/logsController");
 
 app.use(express.json())
 
@@ -76,36 +77,8 @@ app.post("/logs", (req, res) => {
 	res.status(303).json(newLog);
 });
 
-app.get("/v2/logs", (req, res) => {
-	let indexHTML = "<ul>";
-
-	for (let i = 0; i < logs.length; i++) {
-		indexHTML += `<li><a href="/v2/logs/${i}">${logs[i].title}</a></li>`;
-	}
-
-	indexHTML += "</ul>";
-
-	res.send(indexHTML);
-});
-
-app.get("/v2/logs/:index", (req, res) => {
-	const index = req.params.index;
-	const log = logs[index];
-
-	if (log) {
-		const showHTML = `
-		<h1>${log.title}</h1>
-		<p>${log.post}</p>
-		<p>Captain: ${log.captainName}</p>
-		<p>Mistakes were made today: ${log.mistakesWereMadeToday}</p>
-		<p>Days since last crisis: ${log.daysSinceLastCrisis}</p>
-		<a href="/v2/logs">Back</a>`;
-
-		res.send(showHTML);
-	} else {
-		res.status(404).send("Log not found");
-	}
-});
+app.get("/v2/logs", logsController.getIndex);
+app.get("/v2/logs/:index", logsController.getShow);
 
 
 app.use((req, res) => {
