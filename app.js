@@ -6,7 +6,8 @@ require("dotenv").config();
 const PORT = process.env.PORT;
 global.logs = require("./models/log");
 const app = express();
-const logsController = require("./v2/controllers/logsController");
+const logsController = require("./controllers/logsController");
+const logsControllerV2 = require("./v2/controllers/logsController");
 
 app.use(express.json())
 
@@ -14,71 +15,14 @@ app.get("/", (req, res) => {
 	res.send("Welcome to the captain's log");
 });
 
-app.get("/logs", (req, res) => {
-	let filteredLogs = [...logs];
+app.get("/logs", logsController.getAndFilter);
+app.get("/logs/:id", logsController.getSingle);
+app.post("/logs", logsController.postLogs);
+app.delete("/logs/:id", logsController.deleteLog);
+app.put("/logs/:id", logsController.updateLog);
 
-	if (req.query.order === "asc") {
-		filteredLogs.sort((a, b) => a.captainName.localeCompare(b.captainName));
-	} else if (req.query.order === "desc") {
-		filteredLogs.sort((a, b) => b.captainName.localeCompare(a.captainName));
-	}
-
-	if (req.query.mistakes === "true") {
-		filteredLogs = filteredLogs.filter((log) => log.mistakesWereMadeToday);
-	} else if (req.query.mistakes === "false") {
-		filteredLogs = filteredLogs.filter((log) => !log.mistakesWereMadeToday);
-	}
-
-	if (req.query.lastCrisis === "gt10") {
-		filteredLogs = filteredLogs.filter(
-			(log) => log.daysSinceLastCrisis > 10
-		);
-	} else if (req.query.lastCrisis === "gte20") {
-		filteredLogs = filteredLogs.filter(
-			(log) => log.daysSinceLastCrisis >= 20
-		);
-	} else if (req.query.lastCrisis === "lte5") {
-		filteredLogs = filteredLogs.filter(
-			(log) => log.daysSinceLastCrisis <= 5
-		);
-	}
-
-	res.json(filteredLogs);
-});
-
-app.get("/logs/:id", (req, res) => {
-	const id = req.params.id;
-	const log = logs[id];
-
-	if (log) {
-		res.json(log);
-	} else {
-		res.redirect("/404");
-	}
-});
-
-app.post("/logs", (req, res) => {
-	const newLog = req.body;
-
-	if (
-		typeof newLog.captainName !== "string" ||
-		typeof newLog.title !== "string" ||
-		typeof newLog.post !== "string" ||
-		typeof newLog.mistakesWereMadeToday !== "boolean" ||
-		isNaN(parseInt(newLog.daysSinceLastCrisis))
-	) {
-		return res.status(400).json({ error: "Invalid log data types" });
-	}
-
-	const newLastArrayPosition = logs.length;
-	logs.push(newLog);
-
-	res.set("Location", `/logs/${newLastArrayPosition}`);
-	res.status(303).json(newLog);
-});
-
-app.get("/v2/logs", logsController.getIndex);
-app.get("/v2/logs/:index", logsController.getShow);
+app.get("/v2/logs", logsControllerV2.getIndex);
+app.get("/v2/logs/:index", logsControllerV2.getShow);
 
 
 app.use((req, res) => {
