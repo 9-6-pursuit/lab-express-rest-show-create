@@ -1,4 +1,4 @@
-const logs = require("../../models/log");
+const logs = global.logs;
 
 exports.getIndex = (req, res) => {
   let indexHTML = "<ul>";

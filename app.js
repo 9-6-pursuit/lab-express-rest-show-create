@@ -4,7 +4,7 @@ const express = require("express");
 require("dotenv").config();
 
 const PORT = process.env.PORT;
-const logs = require("./models/log");
+global.logs = require("./models/log");
 const app = express();
 const logsController = require("./v2/controllers/logsController");
 
